@@ -1,6 +1,6 @@
 # Overview
 
-[![application.py test](https://github.com/ArchieHarrodine/Azure-Cloud-DevOps/actions/workflows/pythonapp.yml/badge.svg)](https://github.com/ArchieHarrodine/Azure-Cloud-DevOps/actions/workflows/pythonapp.yml)
+[![application.py tests](https://github.com/ArchieHarrodine/Azure-Cloud-DevOps/actions/workflows/pythonapp.yml/badge.svg)](https://github.com/ArchieHarrodine/Azure-Cloud-DevOps/actions/workflows/pythonapp.yml
 
 <TODO: complete this with an overview of your project>
 
