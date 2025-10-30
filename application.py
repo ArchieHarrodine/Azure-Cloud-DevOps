@@ -42,7 +42,7 @@ def predict():
     LOG.info("inference payload DataFrame: %s", inference_payload)
     scaled_payload = scale(inference_payload)
     prediction = list(clf.predict(scaled_payload))
-    return jsonify({'prediction': prediction})
+    return jsonify({'prediction hhdhd': prediction})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
