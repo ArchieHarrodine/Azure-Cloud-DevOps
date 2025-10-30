@@ -1,0 +1,54 @@
+trigger:
+- main
+
+pool: myAgentPool
+
+variables:
+  azureServiceConnectionId: 'myServiceConnection'
+  
+  webAppName: 'flask-sklearn-app'
+
+  environmentName: 'flask-ml-service'
+
+  projectRoot: $(System.DefaultWorkingDirectory)
+
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: BuildJob
+    displayName: Build and Lint
+    pool:
+      name: $(pool)
+
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.10'
+        addToPath: true
+      displayName: 'Set up Python 3.10'
+
+    - script: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+      workingDirectory: $(projectRoot)
+      displayName: 'Install dependencies'
+
+    - script: |
+        export PATH=$HOME/.local/bin:$PATH
+        make install
+      workingDirectory: $(projectRoot)
+      displayName: 'Run make install'
+
+    - script: |
+        export PATH=$HOME/.local/bin:$PATH
+        make lint
+      workingDirectory: $(projectRoot)
+      displayName: 'Run lint checks'
+
+    - script: |
+        export PATH=$HOME/.local/bin:$PATH
+        make test
+      workingDirectory: $(projectRoot)
+      displayName: 'Run test checks'
