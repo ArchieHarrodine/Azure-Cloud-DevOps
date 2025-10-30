@@ -56,26 +56,25 @@ stages:
       displayName: 'Upload package'
       artifact: drop
 
+
 - stage: Deploy
-  displayName: Deploy stage
+  displayName: 'Deploy Web App'
   dependsOn: Build
+  condition: succeeded()
   jobs:
-  - deployment: DeployWebApp
-    displayName: Deploy to Azure Web App
+  - deployment: DeploymentJob
+    pool: myAgentPool
     environment: $(environmentName)
-    pool:
-      name: myAgentPool
     strategy:
       runOnce:
         deploy:
           steps:
-          - download: drop
-            artifact: drop
-
           - task: AzureWebApp@1
-            displayName: 'Deploy to Azure Web App'
+            displayName: 'Deploy Azure Web App using Oryx'
             inputs:
               azureSubscription: $(azureServiceConnectionId)
-              appType: webApp
               appName: $(webAppName)
-              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              appType: webApp
+              package: $(projectRoot)  # Deploy source folder
+              deploymentMethod: auto   # Enables Oryx build
+
