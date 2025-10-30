@@ -40,9 +40,9 @@ def predict():
     LOG.info("JSON payload: %s", json_payload)
     inference_payload = pd.DataFrame(json_payload)
     LOG.info("inference payload DataFrame: %s", inference_payload)
-    scaled_payload = scale(inference_payload)
+    scaled_payload = inference_payload
     prediction = list(clf.predict(scaled_payload))
-    return jsonify({'prediction hhdhd': prediction})
+    return jsonify({'prediction': prediction})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
