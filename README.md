@@ -1,6 +1,6 @@
 # Overview
 
-[![application.py test](https://github.com/ArchieHarrodine/Azure-Cloud-DevOps/actions/workflows/pythonapp.yml/badge.svg)](https://github.com/ArchieHarrodine/Azure-Cloud-DevOps/actions/workflows/pythonapp.yml)
+[![Build Status](https://dev.azure.com/odluser289100/flask-sklearn-app/_apis/build/status%2FArchieHarrodine.Azure-Cloud-DevOps?branchName=main)](https://dev.azure.com/odluser289100/flask-sklearn-app/_build/latest?definitionId=2&branchName=main)
 
 <TODO: complete this with an overview of your project>
 
