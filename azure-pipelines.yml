@@ -1,3 +1,4 @@
+
 trigger:
 - main
 
@@ -42,3 +43,40 @@ stages:
         make test
       workingDirectory: $(projectRoot)
       displayName: 'Run test checks'
+
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+        rootFolderOrFile: '$(projectRoot)'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true
+
+    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      displayName: 'Upload package'
+      artifact: drop
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  jobs:
+  - deployment: DeployWebApp
+    displayName: Deploy to Azure Web App
+    environment: $(environmentName)
+    pool:
+      name: myAgentPool
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: drop
+            artifact: drop
+
+          - task: AzureWebApp@1
+            displayName: 'Deploy to Azure Web App'
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              appType: webApp
+              appName: $(webAppName)
+              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
