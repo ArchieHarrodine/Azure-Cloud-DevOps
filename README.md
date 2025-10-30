@@ -5,10 +5,10 @@
 <TODO: complete this with an overview of your project>
 
 ## Project Plan
-<TODO: Project Plan
+This project is very short and done by a single person, so the project plan doesn't make a lot of sense in some places. Trello boards and time driven spreadsheets make the most sense when there are teams that need an effective way to communicate progress, and when the project is large enough in scope that it isn't following a tutorial for each step. 
 
-* A link to a Trello board for the project
-* A link to a spreadsheet that includes the original and final project plan>
+* [Spreadsheet](https://docs.google.com/spreadsheets/d/1Gg3DPtGbxHriWF4rwVGyFEUSNVV8iF4S_twSMcztPII/edit?usp=sharing) detailing the project plan.
+* [Trello Board](https://trello.com/invite/b/6902011b57350ecc305c87a9/ATTI697d669010881e0e20de03d02c6557ce017E5E7C/azure-cloud-with-devops) used for managing tickets in the project.
 
 ## Instructions
 
