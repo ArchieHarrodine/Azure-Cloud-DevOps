@@ -76,5 +76,6 @@ stages:
               appName: $(webAppName)
               appType: webApp
               package: $(projectRoot)  # Deploy source folder
-              deploymentMethod: auto   # Enables Oryx build
+              deploymentMethod: zipDeploy
+              startUpCommand: 'python3.10 -m pip install -r requirements.txt && python3.10 app.py'
 
