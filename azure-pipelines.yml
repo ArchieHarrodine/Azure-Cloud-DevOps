@@ -43,22 +43,41 @@ stages:
       workingDirectory: $(projectRoot)
       displayName: 'Run test checks'
 
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+        rootFolderOrFile: '$(projectRoot)'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true
+
+    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      displayName: 'Upload package'
+      artifact: drop
+
 - stage: Deploy
-  displayName: 'Deploy Web App'
+  displayName: Deploy stage
   dependsOn: Build
-  condition: succeeded()
   jobs:
-  - deployment: DeploymentJob
-    pool: myAgentPool
+  - deployment: DeployWebApp
+    displayName: Deploy to Azure Web App
     environment: $(environmentName)
+    pool:
+      name: myAgentPool
     strategy:
       runOnce:
         deploy:
           steps:
+          - download: drop
+            artifact: drop
+
           - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App : flask-ml-service'
+            displayName: 'Deploy to Azure Web App'
             inputs:
               azureSubscription: $(azureServiceConnectionId)
-              appName: $(webAppName)
               appType: webApp
-              package: $(projectRoot)  # Deploy source folder directly
+              appName: $(webAppName)
+              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              deploymentMethod: zipDeploy
+              startupCommand: 'python3.10 -m pip install -r requirements.txt && python3.10 application.py'
