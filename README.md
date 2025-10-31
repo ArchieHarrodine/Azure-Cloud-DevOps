@@ -1,8 +1,8 @@
 # Overview
 
-[![Build Status](https://dev.azure.com/odluser289100/flask-sklearn-app/_apis/build/status%2FArchieHarrodine.Azure-Cloud-DevOps?branchName=main)](https://dev.azure.com/odluser289100/flask-sklearn-app/_build/latest?definitionId=2&branchName=main)
+[![Python application test with Github Actions](https://github.com/ArchieHarrodine/Azure-Cloud-DevOps/actions/workflows/pythonapp.yml/badge.svg)](https://github.com/ArchieHarrodine/Azure-Cloud-DevOps/actions/workflows/pythonapp.yml)
 
-<TODO: complete this with an overview of your project>
+This project is creating a CI/CD pipeline with Azure Cloud pipeline, for a web app endpoint that can be curled for the output to a machine learning sklearn model. This focused on linking it together with GitHub, so that upon pushing to main, then it will check the quality with linting and testing, and if they succeed then it will deploy the new release. This is a good scaffold for a simple flask web application, and can be easily expanded upon and developed, very effectively in a team setting with Agile methodology and DevOps culture.
 
 ## Project Plan
 This project is very short and done by a single person, so the project plan doesn't make a lot of sense in some places. Trello boards and time driven spreadsheets make the most sense when there are teams that need an effective way to communicate progress, and when the project is large enough in scope that it isn't following a tutorial for each step. 
@@ -15,34 +15,7 @@ This project is very short and done by a single person, so the project plan does
 <TODO:  
 * Architectural Diagram (Shows how key parts of the system work)>
 
-<TODO:  Instructions for running the Python project.  How could a user with no context run this project without asking you for any help.  Include screenshots with explicit steps to create that work. Be sure to at least include the following screenshots:
-
-* Project running on Azure App Service
-
-* Project cloned into Azure Cloud Shell
-
-* Passing tests that are displayed after running the `make all` command from the `Makefile`
-
-* Output of a test run
-
-* Successful deploy of the project in Azure Pipelines.  [Note the official documentation should be referred to and double checked as you setup CI/CD](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/python-webapp?view=azure-devops).
-
-* Running Azure App Service from Azure Pipelines automatic deployment
-
-* Successful prediction from deployed flask app in Azure Cloud Shell.  [Use this file as a template for the deployed prediction](https://github.com/udacity/nd082-Azure-Cloud-DevOps-Starter-Code/blob/master/C2-AgileDevelopmentwithAzure/project/starter_files/flask-sklearn/make_predict_azure_app.sh).
-The output should look similar to this:
-
-```bash
-udacity@Azure:~$ ./make_predict_azure_app.sh
-Port: 443
-{"prediction":[20.35373177134412]}
-```
-
-* Output of streamed log files from deployed application
-
-This guide outlines the steps to set up SSH access, deploy a Python web application to Azure App Service, and configure Azure DevOps CI/CD pipelines with a self-hosted Linux agent.
-
----
+How to set up:
 
 ### 1. Generate and Add SSH Keys
 
@@ -193,6 +166,38 @@ curl -d '<json>'\
      -X POST https://flask-sklearn-app.azurewebsites.net:$PORT/predict 
 ```
 Which will return a JSON friendly prediction output.
+
+### Required screenshots:
+* Project running on Azure App Service
+![Project running on Azure App Service](./images/azure-app-service.png)
+
+* Project cloned into Azure Cloud Shell
+![Project cloned into Azure Cloud Shell](./images/ssh-clone.png)
+
+* Passing tests that are displayed after running the `make all` command from the `Makefile`
+![Passing tests displayed after running `make all`](./images/make-all.png)
+
+* Output of a test run
+![Output of a test run](./images/make-all.png)
+
+* Successful deploy of the project in Azure Pipelines.  [Note the official documentation should be referred to and double checked as you setup CI/CD](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/python-webapp?view=azure-devops).
+
+* Running Azure App Service from Azure Pipelines automatic deployment
+
+* Successful prediction from deployed flask app in Azure Cloud Shell.  [Use this file as a template for the deployed prediction](https://github.com/udacity/nd082-Azure-Cloud-DevOps-Starter-Code/blob/master/C2-AgileDevelopmentwithAzure/project/starter_files/flask-sklearn/make_predict_azure_app.sh).
+The output should look similar to this:
+
+```bash
+udacity@Azure:~$ ./make_predict_azure_app.sh
+Port: 443
+{"prediction":[20.35373177134412]}
+```
+
+* Output of streamed log files from deployed application
+
+This guide outlines the steps to set up SSH access, deploy a Python web application to Azure App Service, and configure Azure DevOps CI/CD pipelines with a self-hosted Linux agent.
+
+---
 
 ## Enhancements
 The following improvements are planned to extend functionality, maintainability, and scalability:
