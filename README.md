@@ -15,7 +15,7 @@ This project is very short and done by a single person, so the project plan does
 
 ## Instructions
 
-![Architecture Diagram](./images/Architecture Diagram.png)
+![Architecture Diagram](./images/ArchitectureDiagram.png)
 
 This guide outlines the steps to set up SSH access, deploy a Python web application to Azure App Service, and configure Azure DevOps CI/CD pipelines with a self-hosted Linux agent.
 
