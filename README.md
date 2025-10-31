@@ -15,7 +15,7 @@ This project is very short and done by a single person, so the project plan does
 <TODO:  
 * Architectural Diagram (Shows how key parts of the system work)>
 
-How to set up:
+This guide outlines the steps to set up SSH access, deploy a Python web application to Azure App Service, and configure Azure DevOps CI/CD pipelines with a self-hosted Linux agent.
 
 ### 1. Generate and Add SSH Keys
 
@@ -168,6 +168,7 @@ curl -d '<json>'\
 Which will return a JSON friendly prediction output.
 
 ### Required screenshots:
+
 * Project running on Azure App Service
 ![Project running on Azure App Service](./images/azure-app-service.png)
 
@@ -177,25 +178,16 @@ Which will return a JSON friendly prediction output.
 * Passing tests that are displayed after running the `make all` command from the `Makefile`
 ![Passing tests displayed after running `make all`](./images/make-all.png)
 
-* Output of a test run
-![Output of a test run](./images/make-all.png)
+* Successful deploy of the project in Azure Pipelines.  
+![Azure pipelines](./images/azure-pipeline.png)
+![Azure pipelines](./images/azure-pipeline-3.png)
+![Azure pipelines](./images/azure-pipeline-4.png)
 
-* Successful deploy of the project in Azure Pipelines.  [Note the official documentation should be referred to and double checked as you setup CI/CD](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/python-webapp?view=azure-devops).
-
-* Running Azure App Service from Azure Pipelines automatic deployment
-
-* Successful prediction from deployed flask app in Azure Cloud Shell.  [Use this file as a template for the deployed prediction](https://github.com/udacity/nd082-Azure-Cloud-DevOps-Starter-Code/blob/master/C2-AgileDevelopmentwithAzure/project/starter_files/flask-sklearn/make_predict_azure_app.sh).
-The output should look similar to this:
-
-```bash
-udacity@Azure:~$ ./make_predict_azure_app.sh
-Port: 443
-{"prediction":[20.35373177134412]}
-```
+* Successful prediction from deployed flask app in Azure Cloud Shell  
+![Successful prediction from deployed flask app in Azure Cloud Shell](./images/predict-example.png)
 
 * Output of streamed log files from deployed application
-
-This guide outlines the steps to set up SSH access, deploy a Python web application to Azure App Service, and configure Azure DevOps CI/CD pipelines with a self-hosted Linux agent.
+![Output of streamed log files from deployed application](./images/azure-logs.png)
 
 ---
 
@@ -203,15 +195,15 @@ This guide outlines the steps to set up SSH access, deploy a Python web applicat
 The following improvements are planned to extend functionality, maintainability, and scalability:
 
 * **Interactive Interface**  
-  Introduce a user-friendly interface for interacting with the application and visualizing predictions.
+  Introduce a user-friendly interface for interacting with the application and visualizing predictions, that can be used alongside the API.
 
 * **Configurable Model Options**  
-  Add optional CLI flags or configuration parameters to allow selection between different machine learning models.
+  Add optional CLI flags or configuration parameters to allow selection between different machine learning models of linear regression, gradient descent and .
 
 * **Expanded Deployment Infrastructure**  
   - Implement branch-based deployment workflows (e.g., staging, testing, production).  
-  - Integrate automated testing and linting across **all** project files — not just `application.py`.  
-  - Improve CI/CD pipeline reliability and coverage for end-to-end testing and validation.
+  - Integrate automated testing and linting across **all** project files, not just `application.py`.  
+  - Improve CI/CD pipeline reliability and coverage for extensive testing and validation.
 
 ## Demo 
 
