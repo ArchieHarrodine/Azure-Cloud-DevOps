@@ -2,6 +2,9 @@
 
 [![Python application test with Github Actions](https://github.com/ArchieHarrodine/Azure-Cloud-DevOps/actions/workflows/pythonapp.yml/badge.svg)](https://github.com/ArchieHarrodine/Azure-Cloud-DevOps/actions/workflows/pythonapp.yml)
 
+Screenshot of the GitHub actions:
+![GitHub actions screenshot](./images/status-badge.png)
+
 This project is creating a CI/CD pipeline with Azure Cloud pipeline, for a web app endpoint that can be curled for the output to a machine learning sklearn model. This focused on linking it together with GitHub, so that upon pushing to main, then it will check the quality with linting and testing, and if they succeed then it will deploy the new release. This is a good scaffold for a simple flask web application, and can be easily expanded upon and developed, very effectively in a team setting with Agile methodology and DevOps culture.
 
 ## Project Plan
@@ -12,8 +15,7 @@ This project is very short and done by a single person, so the project plan does
 
 ## Instructions
 
-<TODO:  
-* Architectural Diagram (Shows how key parts of the system work)>
+![Architecture Diagram](./images/Architecture Diagram.png)
 
 This guide outlines the steps to set up SSH access, deploy a Python web application to Azure App Service, and configure Azure DevOps CI/CD pipelines with a self-hosted Linux agent.
 
@@ -209,4 +211,4 @@ The following improvements are planned to extend functionality, maintainability,
 
 <TODO: Add link Screencast on YouTube>
 
-
+Small note: the code was broken as it created a new scaler on every input, which normalises it all to 0, so nothing meaningful happens. There is no scaler pickle saved for what trained the models, so we just removed it for now and assumed it was on the same scale.
