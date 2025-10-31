@@ -40,58 +40,173 @@ Port: 443
 
 * Output of streamed log files from deployed application
 
-1. in Azure CLI (bash): ssh-keygen -t rsa; press enter on all
-2. cat /home/odl_user/.ssh/id_rsa.pub
-3. copy key into github, settings, SSH and GPG keys, add new SSH key
-4. go to forked repository, go on code, then SSH, "git@github.com:ArchieHarrodine/Azure-Cloud-DevOps.git"
-5. git clone git@github.com:ArchieHarrodine/Azure-Cloud-DevOps.git
-6. python -m venv .venv
-7. source .venv/bin/activate
-8. go into your github folder
-9. run az webapp up --name [Your_unique_app_name] --resource-group [resource-group] --sku B1 --logs --runtime "PYTHON:3.10" ; assume that unique name is flask-sklearn-app, resource group is Azuredevops. let it deploy.
-10. to test , run in another terminal chmod +x make_predict_azure_app.sh, ./make_predict_azure_app.sh. should return Port: 443
-{"prediction":[697.206833661433]}
-once built
-12. Go to Azure DevOps organisations, view organisations, create organisation, then creare project with app name
-13. Go to settings, then service connection, create service connection, Azure resource manager. Use default everything, name it myServiceConnection. grant it access permission to all pipelines
-14. Create personal access token (PAT) in top right user settings. call it myPAT and give it full access. copy it as you wont access it again
-15. Back to settings, make an Agentpool, myAgentPool, self hosted, grant permission
-16. go to virtual machines, create new VM, use ur resource group, name myLinuxVM, availability options: no infrastructure needed. use image DS1_v2, use password authentication. username: devops_admin, AzureDevops@123, allow SSH 22 ports. review + create
-17. once deployed, open up another cli. copy the public IP attached ssh devops_admin@public ip, login
-18. then:
+This guide outlines the steps to set up SSH access, deploy a Python web application to Azure App Service, and configure Azure DevOps CI/CD pipelines with a self-hosted Linux agent.
+
+---
+
+### 1. Generate and Add SSH Keys
+
+In Azure Cloud Shell or your local terminal, generate an SSH key pair:
+```bash
+ssh-keygen -t rsa
+```
+Press Enter to accept the default options for all prompts. Display your new public key:
+```bash
+cat ~/.ssh/id_rsa.pub
+```
+Copy the displayed key and add it to GitHub. Go to GitHub -> Settings -> SSH and GPG Keys -> New SSH Key. Paste the key and save.
+
+### 2. Clone the repoistory
+In the Azure Cloud Shell:
+```bash
+git clone git@github.com:<organisation_name>/<repository_name>.git
+```
+You can copy the exact link from your repoistory on GitHub.
+
+### 3. Setup Python virtual environment
+Next set up the virtual environment and install the requirements. This can be used for some testing locally.
+```bash
+python -m venv .venv
+source .venv/bin/activate
+cd <repository_name>
+pip install -r requirements.txt
+```
+
+### 4. Deploy the Web App to Azure
+Deploy the app in the Azure CLI:
+```bash
+az webapp up \
+  --name <app_name> \
+  --resource-group <resource_group> \
+  --sku B1 \
+  --logs \
+  --runtime "PYTHON:3.10"
+```
+This may take a second to build and deploy. You can see it on the portal in App Services.
+
+### 5. Test the Deployed App
+To test that the endpoint is working, in another Azure shell terminal, run the prediction script provided in the GitHub:
+```bash
+chmod +x make_predict_azure_app.sh
+./make_predict_azure_app.sh
+```
+This should return something like:
+```bash
+Port: 443
+{"prediction": [697.206833661433]}
+```
+
+### 6. Configure Azure DevOps
+* Go to Azure DevOps -> Organisations -> New Organisation `<org_name>`
+* Create a new project in the organisation `<project_name>`
+* Navigate to Project Settings -> Service Connections -> New Service Connection
+* Create the service connection `<service_name>`, and select Azure Resource Manager, grant access to all pipelines and otherwise use default optuons.
+* Navigate to User Settings -> Personal Access Tokens -> New Personal Access Token
+* Create the personal access token `<pat_name>`, and give it full access. Copy the token securely, as you won't be able to view it again.
+* Navigate to Project Settings -> Agent Pools -> Create new Agent Pool
+* Create a new Agent Pool `<agent_name>`, selecting the self-hosted option, and grant pipeline permissions.
+
+### 7. Create and Configure a Linux virtual machine
+In the Azure Portal create a new virtual machine:
+* Resource Group: `<resource_group>`
+* VM Name: `<vm_name>` (e.g. `myLinuxVM`)
+* Image: Ubuntu Server
+* Size: DS1_v2
+* Authentication: Password
+* Username: `<username>`
+* Password: `<password>`
+* Inbound port: Allow SSH (22)
+In the portal you will see the public IP address `<pub_ip_address>`. After deployment, connect to the VM:
+```bash
+ssh <username>@<pub_ip_address>
+```
+This will prompt you to enter the password you setup before.
+
+### 8. Setup docker on the machine
+Once ssh-ed into the VM, run the following commands:
+```bash
 sudo snap install docker
 sudo groupadd docker
 sudo usermod -aG docker $USER
-19. Go back to myAgentPool, new agent, go to Linux, click download to get the link
-20. back on ur app:
-curl -O https://download.agent.dev.azure.com/agent/4.261.0/vsts-agent-linux-x64-4.261.0.tar.gz
+```
+
+### 9. Install and configure the DevOps agent
+In Azure DevOps, go to the Agent Pool -> New Agent -> Linux and copy the download link. Then the VM:
+```bash
+curl -O <download_link>
 mkdir myagent && cd myagent
-tar zxvf ../vsts-agent-linux-x64-4.261.0.tar.gz
+tar zxvf ../<vsts-agent-linux>
 ./config.sh
-21. then to fill in: do license Y, server url: https://dev.azure.com/organisation name, enter, enter PAT, agentpool name, enter the rest
-22. do this
+```
+For example the download link will be similar to: `https://vstsagentpackage.azureedge.net/agent/4.261.0/vsts-agent-linux-x64-4.261.0.tar.gz`
+
+You will then be prompted with some inputs:
+* License agreement: Y
+* Server URL: `https://dev.azure.com/<organisation_name>`
+* Authentication type: PAT
+* Personal access token: `<pat_name>`
+* Agent Pool: `<agent_name>`
+
+Then install and start the service:
+```bash
 sudo ./svc.sh install
 sudo ./svc.sh start
+```
+
+### 10. Install Python and development tools on the VM
+While still in the VM:
+```bash
 sudo apt-get update
-sudo apt update
-sudo apt install software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt install python3.10
-sudo apt-get install python3.10-venv
-sudo apt-get install python3-pip
-sudo apt-get install python3.10-distutils
-sudo apt-get -y install zip
-sudo apt install pipx
+sudo apt install -y software-properties-common python3.10 python3.10-venv python3-pip python3.10-distutils zip pipx
 export PATH=$HOME/.local/bin:$PATH
 pipx install pylint
-23. Check that in the agent tab of myAgentPool that myLinuxVM is an agent there 
-24. Go to pipeline, create pipeline, connect with github, select forked repo, select existing pipeline and pick azure-pipelines.yml
-25. Run the pipeline, will do the build stage and deploy stage. when it gets to deploy you will need to give permissions. just click permit
-26. will now be redeploying the webapp
+```
+Verify that your VM agent appears under Project Settings -> Agent Pools -> `<agent_name>`
+
+### 11. Create and run the pipeline
+* In Azure DevOps, navigate to Pipelines -> Create Pipeline
+* Connect with GtHub, and select the forked repository.
+* Choose the existing YAML file and select `azure-pipelines.yml`.
+* Run the pipeline.
+When prompted for permissions during the deploy stage, click Permit.
+
+### 12. Redeploy and Test
+After the pipeline completes, redeploys, and your app is live you can test predictions again:
+```bash
+./make_predict_azure_app.sh
+```
+An example JSON input that is in the file:
+```json
+{
+  "CHAS": { "0": 0 },
+  "RM": { "0": 120.575 },
+  "TAX": { "0": 112.0 },
+  "PTRATIO": { "0": 15.3 },
+  "B": { "0": 396.9 },
+  "LSTAT": { "0": 4.98 }
+}
+```
+Which can be curled with the command:
+```bash
+curl -d '<json>'\
+     -H "Content-Type: application/json" \
+     -X POST https://flask-sklearn-app.azurewebsites.net:$PORT/predict 
+```
+Which will return a JSON friendly prediction output.
 
 ## Enhancements
+The following improvements are planned to extend functionality, maintainability, and scalability:
 
-<TODO: A short description of how to improve the project in the future>
+* **Interactive Interface**  
+  Introduce a user-friendly interface for interacting with the application and visualizing predictions.
+
+* **Configurable Model Options**  
+  Add optional CLI flags or configuration parameters to allow selection between different machine learning models.
+
+* **Expanded Deployment Infrastructure**  
+  - Implement branch-based deployment workflows (e.g., staging, testing, production).  
+  - Integrate automated testing and linting across **all** project files — not just `application.py`.  
+  - Improve CI/CD pipeline reliability and coverage for end-to-end testing and validation.
 
 ## Demo 
 
